@@ -1,4 +1,7 @@
 <?php
+define('BASE_DECIMAL', 10);
+define('BASE_HEXADECIMAL', 16);
+
 function shiftRows(&$array, $posizioni)
 {
     $elementiRimossi = array_splice($array, 0, $posizioni);
@@ -20,7 +23,7 @@ function moltiplicaPolinomi($poly1, $poly2)
 }
 
 
-function divisionePolinomiale($dividendo, $divisore)
+function dividiPolinomi($dividendo, $divisore)
 {
     $n = count($dividendo);
     $m = count($divisore);
@@ -60,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (count($chars) != 16) {
         $errorMessage = "Inserisci una parola da 16 byte.";
-        echo "<script>alert('{$errorMessage}'); window.location.href = '{$_SERVER['REQUEST_URI']}/';</script>";
+        echo "<script>alert('{$errorMessage}'); window.location.href = '{$_SERVER['REQUEST_URI']}';</script>";
         exit();
     } else {
         // Input
@@ -69,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         for ($i = 0; $i <= 3; $i++) {
             for ($j = 0; $j <= 3; $j++) {
-                $matrix[$j][$i] = base_convert((string)ord($caratteri_inseriti[$i][$j]), 10, 16);
+                $matrix[$j][$i] = base_convert((string)ord($caratteri_inseriti[$i][$j]), BASE_DECIMAL, BASE_HEXADECIMAL);
             }
         }
 
@@ -337,7 +340,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         for ($i = 0; $i < 4; $i++) {
             for ($j = 0; $j < 4; $j++) {
                 $parts = str_split(str_pad((string)$matrix[$i][$j], 2, "0", STR_PAD_LEFT), 1);
-                $index = base_convert($parts[0], 16, 10) * 16 + base_convert($parts[1], 16, 10);
+                $index = base_convert($parts[0], BASE_HEXADECIMAL, BASE_DECIMAL) * 16 + base_convert($parts[1], BASE_HEXADECIMAL, BASE_DECIMAL);
                 $matrix[$i][$j] = $sBox[$index];
             }
         }
@@ -355,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     for ($i = 0; $i < 4; $i++) {
         for ($j = 0; $j < 4; $j++) {
-            $polinomi[$i][$j] = base_convert($matrix[$j][$i], 16, 10);
+            $polinomi[$i][$j] = base_convert($matrix[$j][$i], BASE_HEXADECIMAL, BASE_DECIMAL);
         }
     }
 
@@ -364,13 +367,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     for ($i = 0; $i < 4; $i++) {
-        $polinomi[$i] = divisionePolinomiale($polinomi[$i], $nx);
+        $polinomi[$i] = dividiPolinomi($polinomi[$i], $nx);
     }
 
     // AddRoundKey
     for ($i = 0; $i < 4; $i++) {
         for ($j = 0; $j < 7; $j++) {
-            $matrix[$j][$i] = base_convert($polinomi[$i][$j], 10, 16);
+            $matrix[$j][$i] = base_convert($polinomi[$i][$j], BASE_DECIMAL, BASE_HEXADECIMAL);
         }
     }
 
