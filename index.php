@@ -58,7 +58,11 @@ function divisionePolinomiale($dividendo, $divisore)
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $chars = str_split($_POST["chars"]);
 
-    if (count($chars) == 16) {
+    if (count($chars) != 16) {
+        $errorMessage = "Inserisci una parola da 16 byte.";
+        echo "<script>alert('{$errorMessage}'); window.location.href = '{$_SERVER['REQUEST_URI']}/';</script>";
+        exit();
+    } else {
         // Input
         $matrix = [];
         $caratteri_inseriti = array_chunk($chars, 4);
@@ -337,8 +341,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $matrix[$i][$j] = $sBox[$index];
             }
         }
-    } else {
-        echo "Inserisci una parola da 16 byte.";
     }
 
     // Shift Rows
@@ -430,7 +432,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
 
         h1 {
-            color: #f38ba8;
+            color: #fab387;
         }
 
         input {
@@ -467,6 +469,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             margin: 10px 0;
             letter-spacing: 1px;
         }
+
+        .error {
+            color: #f38ba8;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -474,10 +482,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <h1>AES Encryption</h1>
     <form action="<?php $_SERVER['PHP_SELF'] ?>" method="POST">
         <label for="chars">Inserisci una stringa da 16 byte:</label><br />
-        <input type="text" minlength="16" name="chars" />
+        <input type="text" min="16" name="chars" required />
         <input type="submit" value="Invia">
     </form>
-    <?php if (!empty($result)): ?>
+    <?php if (isset($result) && !empty($result)): ?>
         <p>
             <b>The encrypted string is:</b><br />
             <span class="result-string"><?= $result ?></span>
