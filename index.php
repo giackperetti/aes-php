@@ -1,6 +1,8 @@
 <?php
 define('BASE_DECIMAL', 10);
 define('BASE_HEXADECIMAL', 16);
+define('NUM_POLINOMI', 4);
+define('NUM_EMELEMNTI_POLINOMIO', 7);
 
 function shiftRows(&$array, $posizioni)
 {
@@ -371,8 +373,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     // AddRoundKey
-    for ($i = 0; $i < 4; $i++) {
-        for ($j = 0; $j < 7; $j++) {
+    for ($i = 0; $i < NUM_POLINOMI; $i++) {
+        for ($j = 0; $j < NUM_EMELEMNTI_POLINOMIO; $j++) {
             $matrix[$j][$i] = base_convert($polinomi[$i][$j], BASE_DECIMAL, BASE_HEXADECIMAL);
         }
     }
